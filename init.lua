@@ -17,9 +17,6 @@ return {
     },
   },
 
-  -- Set colorscheme to use
-  colorscheme = "astrodark",
-
   -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
   diagnostics = {
     virtual_text = true,
@@ -49,6 +46,7 @@ return {
     },
     -- enable servers that you already have installed without mason
     servers = {
+      "ghdl_ls"
       -- "pyright"
     },
   },
@@ -68,6 +66,28 @@ return {
   -- augroups/autocommands and custom filetypes also this just pure lua so
   -- anything that doesn't fit in the normal config locations above can go here
   polish = function()
+    --
+    vim.api.nvim_command("set background=light")
+    vim.g.everforest_background = "soft"
+    vim.g.everforest_better_perormance = 1
+
+    -- Setup tree-sitter vhdl
+    -- https://github.com/alemuller/tree-sitter-vhdl
+    -- requires tree-sitter-cli
+    -- run tree-sitter generate and add the directory to parser-directories in ~/.config/tree-sitter/config.json
+    --
+    local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+    parser_config.vhdl = {
+      install_info = {
+        url = "~/projects/tree-sitter-vhdl", -- local path or git repo
+        files = {"src/parser.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
+        -- optional entries:
+        branch = "main", -- default branch in case of git repo if different from master
+        generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+        requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+      },
+      filetype = "vhdl", -- if filetype does not match the parser name
+    }
     -- Set up custom filetypes
     -- vim.filetype.add {
     --   extension = {
