@@ -36,7 +36,6 @@ for line in text:
     pot_match = re.search(regex,line)
     if pot_match:
         path = pot_match.group("PATH")
-        print(path)
         if ".." in path:
             path = path.replace("./../../", grlib)
         else:
@@ -74,8 +73,10 @@ with open(fname, "w") as json_f:
     print(f"wrote config to {fname}")
 
 # GHDL needs to have done the import for the LSP to work
-os.system("make -f make.ghdl ghdl-import ")
+print("Running GHDL import")
+os.system("make -s -f make.ghdl ghdl-import ")
 
 #move file to root dir
+print(f"Moving {fname} to GRLIB root")
 os.rename(design_dir+fname, grlib+fname)
 
